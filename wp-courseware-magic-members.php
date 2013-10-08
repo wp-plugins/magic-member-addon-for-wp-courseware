@@ -1,7 +1,7 @@
 <?php
 /*
  * Plugin Name: WP Courseware - Magic Members Add On
- * Version: 1.00
+ * Version: 1.0
  * Plugin URI: http://flyplugins.com
  * Description: The official extension for WP Courseware to add support for the Magic Members membership plugin for WordPress.
  * Author: Fly Plugins

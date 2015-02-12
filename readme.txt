@@ -37,7 +37,7 @@ For more info about Fly Plugins check out the following links:
 * Check out the Fly Plugins [YouTube](http://www.youtube.com/flyplugins) YouTube channel.
 
 = Disclaimer =
-This is not an actual membership plugin. It is only the integration, or “middle-man” between WP Courseware and Exchange Membership.
+This is not an actual membership plugin. It is only the integration, or “middle-man” between WP Courseware and Magic Members.
 
 == Installation ==
 

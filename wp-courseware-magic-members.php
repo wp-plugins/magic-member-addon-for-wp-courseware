@@ -1,27 +1,13 @@
 <?php
 /*
  * Plugin Name: WP Courseware - Magic Members Add On
- * Version: 1.0
+ * Version: 1.1
  * Plugin URI: http://flyplugins.com
  * Description: The official extension for WP Courseware to add support for the Magic Members membership plugin for WordPress.
  * Author: Fly Plugins
  * Author URI: http://flyplugins.com
  */
-/*
- Copyright 2013 Fly Plugins - Evolution Media Services, LLC
 
- Licensed under the Apache License, Version 2.0 (the "License");
- you may not use this file except in compliance with the License.
- You may obtain a copy of the License at
-
- http://www.apache.org/licenses/LICENSE-2.0
-
- Unless required by applicable law or agreed to in writing, software
- distributed under the License is distributed on an "AS IS" BASIS,
- WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- See the License for the specific language governing permissions and
- limitations under the License.
- */
 
 // Main parent class
 include_once 'class_members.inc.php';
@@ -111,6 +97,35 @@ class WPCW_Members_MagicMembers extends WPCW_Members
 		// Update course access whenever the user is updated. Best that's possible with Magic Member. 
 		add_action('mgm_user_options_save', 			array($this, 'handle_updateUserCourseAccess'), 10, 2);
 	}
+
+	/**
+	 * Assign selected courses to members of a paticular level.
+	 * @param Level ID in which members will get courses enrollment adjusted.
+	 */
+	protected function retroactive_assignment($level_ID)
+    {
+    	$page = new PageBuilder(false);
+
+    	//Get members associated with $level_ID
+		$members = mgm_get_members_with('membership_type', $level_ID);
+
+		if (count($members) > 0){
+			//Enroll members into of level
+			foreach ($members as $member){
+				// Get user levels
+				$membership_type = mgm_get_subscribed_membershiptypes($member);
+				// Over to the parent class to handle the sync of data.
+				parent::handle_courseSync($member, $membership_type);
+			}
+				
+		$page->showMessage(__('All members were successfully retroactively enrolled into the selected courses.', 'wp_courseware'));
+            
+        return;
+
+		}else {
+            $page->showMessage(__('No existing customers found for the specified product.', 'wp_courseware'));
+        }
+    }
 	
 
 	/**
@@ -124,10 +139,11 @@ class WPCW_Members_MagicMembers extends WPCW_Members
 	{
 		// Get membership type for this user
 		$mgm_member = mgm_get_member($id);
-		$membership_type = $mgm_member->membership_type;
+		//$membership_type = $mgm_member->membership_type;
+		$membership_type = mgm_get_subscribed_membershiptypes($id);
 				
 		// Over to the parent class to handle the sync of data.
-		parent::handle_courseSync($id, array($membership_type));
+		parent::handle_courseSync($id, $membership_type);
 	}
 	
 	
